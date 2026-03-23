@@ -20,6 +20,12 @@ func pokeDex(config *config) {
 			continue
 		}
 		cmdName := prompt[0]
+		if cmdName == "explore" {
+			if len(prompt) == 1 {
+				continue
+			}
+			config.locationArea = getLocationArea(prompt[1:])
+		}
 		cmd, ok := commands[cmdName]
 		if ok {
 			err := cmd.callback(config)
@@ -38,6 +44,10 @@ func cleanInput(text string) []string {
 	return strings.Fields(strings.ToLower(text))
 }
 
+func getLocationArea(prompt []string) string {
+	return strings.Join(prompt, " ")
+}
+
 type cliCommand struct {
 	name        string
 	description string
@@ -48,6 +58,7 @@ type config struct {
 	pokeapiClient   pokeapi.Client
 	nextLocationUrl *string
 	prevLocationUrl *string
+	locationArea    string
 }
 
 func getCommands() map[string]cliCommand {
@@ -71,6 +82,11 @@ func getCommands() map[string]cliCommand {
 			name:        "mapb",
 			description: "Displays the names of the previous 20 location areas in the Pokemon world.",
 			callback:    commandMapBack,
+		},
+		"explore": {
+			name:        "explore",
+			description: "Displays the names of all Pokemon that can be found at location LocationName",
+			callback:    commandExplore,
 		},
 	}
 }
