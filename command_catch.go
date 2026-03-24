@@ -1,17 +1,23 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"math/rand"
 )
 
-func commandCatch(config *config) error {
-	if _, ok := config.pokeDex[config.pokemonName]; ok {
-		fmt.Printf("%s is already in your PokeDex\n", config.pokemonName)
+func commandCatch(config *config, args ...string) error {
+	if len(args) != 1 {
+		return errors.New("you must provide a pokemon name")
+	}
+
+	pokemonName := args[0]
+	if _, ok := config.pokeDex[pokemonName]; ok {
+		fmt.Printf("%s is already in your PokeDex\n", pokemonName)
 		return nil
 	}
 
-	pokemon, err := config.pokeapiClient.CatchPokemon(config.pokemonName)
+	pokemon, err := config.pokeapiClient.CatchPokemon(pokemonName)
 	if err != nil {
 		return err
 	}
@@ -23,9 +29,9 @@ func commandCatch(config *config) error {
 
 	if chance >= benchmark {
 		config.pokeDex[pokemon.Name] = pokemon
-		fmt.Printf("%s was cought!\n", config.pokemonName)
+		fmt.Printf("%s was cought!\n", pokemon.Name)
 	} else {
-		fmt.Printf("%s escaped!\n", config.pokemonName)
+		fmt.Printf("%s escaped!\n", pokemon.Name)
 	}
 	return nil
 }

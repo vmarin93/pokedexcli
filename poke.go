@@ -20,21 +20,13 @@ func pokeDex(config *config) {
 			continue
 		}
 		cmdName := prompt[0]
-		if cmdName == "explore" {
-			if len(prompt) == 1 {
-				continue
-			}
-			config.locationArea = getLocationArea(prompt[1:])
-		}
-		if cmdName == "catch" {
-			if len(prompt) == 1 {
-				continue
-			}
-			config.pokemonName = strings.ToLower(prompt[1])
+		args := []string{}
+		if len(prompt) > 1 {
+			args = prompt[1:]
 		}
 		cmd, ok := commands[cmdName]
 		if ok {
-			err := cmd.callback(config)
+			err := cmd.callback(config, args...)
 			if err != nil {
 				fmt.Println(err)
 			}
@@ -50,22 +42,16 @@ func cleanInput(text string) []string {
 	return strings.Fields(strings.ToLower(text))
 }
 
-func getLocationArea(prompt []string) string {
-	return strings.Join(prompt, " ")
-}
-
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(*config) error
+	callback    func(*config, ...string) error
 }
 
 type config struct {
 	pokeapiClient   pokeapi.Client
 	nextLocationUrl *string
 	prevLocationUrl *string
-	locationArea    string
-	pokemonName     string
 	pokeDex         map[string]pokeapi.Pokemon
 }
 
