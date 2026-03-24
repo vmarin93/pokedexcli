@@ -87,5 +87,15 @@ func getCommands() map[string]cliCommand {
 			description: "Throw a pokeball at a Pokemon in the attempts to catch it. Any succesfull attempt will add the Pokemon to your PokeDex",
 			callback:    commandCatch,
 		},
+		"inspect": {
+			name:        "inspect",
+			description: "Inspect a Pokemon that's already in your PokeDex to see more information about it",
+			callback:    commandInspect,
+		},
+		"pokedex": {
+			name:        "pokedex",
+			description: "List all the pokemons that you have caught inside your PokeDex",
+			callback:    commandPokedex,
+		},
 	}
 }

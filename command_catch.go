@@ -30,6 +30,7 @@ func commandCatch(config *config, args ...string) error {
 	if chance >= benchmark {
 		config.pokeDex[pokemon.Name] = pokemon
 		fmt.Printf("%s was cought!\n", pokemon.Name)
+		fmt.Println("You may now inspect it with the inspect command.")
 	} else {
 		fmt.Printf("%s escaped!\n", pokemon.Name)
 	}
