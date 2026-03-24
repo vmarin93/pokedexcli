@@ -26,6 +26,12 @@ func pokeDex(config *config) {
 			}
 			config.locationArea = getLocationArea(prompt[1:])
 		}
+		if cmdName == "catch" {
+			if len(prompt) == 1 {
+				continue
+			}
+			config.pokemonName = strings.ToLower(prompt[1])
+		}
 		cmd, ok := commands[cmdName]
 		if ok {
 			err := cmd.callback(config)
@@ -59,6 +65,8 @@ type config struct {
 	nextLocationUrl *string
 	prevLocationUrl *string
 	locationArea    string
+	pokemonName     string
+	pokeDex         map[string]pokeapi.Pokemon
 }
 
 func getCommands() map[string]cliCommand {
@@ -85,8 +93,13 @@ func getCommands() map[string]cliCommand {
 		},
 		"explore": {
 			name:        "explore",
-			description: "Displays the names of all Pokemon that can be found at location LocationName",
+			description: "Displays the names of all Pokemon that can be found at location <location name>",
 			callback:    commandExplore,
+		},
+		"catch": {
+			name:        "catch",
+			description: "Throw a pokeball at a Pokemon in the attempts to catch it. Any succesfull attempt will add the Pokemon to your PokeDex",
+			callback:    commandCatch,
 		},
 	}
 }
