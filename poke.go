@@ -1,28 +1,29 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/vmarin93/pokedexcli/internal/pokeapi"
 )
 
 func pokeDex(config *config) {
-	scanner := bufio.NewScanner(os.Stdin)
 	commands := getCommands()
+	prompt := UserPrompt{
+		inputHistory: []string{""},
+	}
 	for {
-		fmt.Print("Pokedex > ")
-		scanner.Scan()
-		prompt := cleanInput(scanner.Text())
-		if len(prompt) == 0 {
+		input, err := prompt.getUserInput()
+		if err != nil {
+			fmt.Println(err)
+		}
+		if len(input) == 0 {
 			continue
 		}
-		cmdName := prompt[0]
+		cmdName := input[0]
 		args := []string{}
-		if len(prompt) > 1 {
-			args = prompt[1:]
+		if len(input) > 1 {
+			args = append(args, input[1])
 		}
 		cmd, ok := commands[cmdName]
 		if ok {
