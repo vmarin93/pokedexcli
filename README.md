@@ -33,7 +33,12 @@ go run .
 
 ## Usage
 
-Once inside the REPL, you can use the following commands:
+The CLI features a custom-built interactive shell. Once inside the REPL, you can use the following keys:
+- **Up/Down Arrows**: Navigate through your command history.
+- **Backspace/Delete**: Edit your current command.
+- **Ctrl-C**: Safely exit the application.
+
+Available commands:
 
 - `help`: Displays a help message describing all available commands.
 - `map`: Displays the names of 20 location areas in the Pokémon world. Each subsequent call displays the next 20 areas.
@@ -47,9 +52,18 @@ Once inside the REPL, you can use the following commands:
 ## Technical Highlights
 
 This project explores several core Go concepts:
+
+### Custom Interactive Shell
+Beyond the standard requirements, I implemented a custom terminal line editor from scratch:
+- **Terminal Raw Mode**: Used `golang.org/x/term` to take full control of the TTY, enabling real-time keystroke processing.
+- **Unicode/Rune Support**: Implemented a `[]rune` buffer strategy to ensure correct handling of multi-byte characters and symbols.
+- **Stateful History Engine**: Designed a custom history navigation system with an "off-by-one" boundary state machine to handle command drafts and historical lookups.
+- **Encapsulated Architecture**: Refactored procedural terminal logic into a stateful `UserPrompt` struct to manage buffers, cursors, and history consistently.
+
+### Core Go Concepts
 - **JSON Marshaling/Unmarshaling**: Interacting with the [PokeAPI](https://pokeapi.co/).
-- **HTTP Clients**: Managing network requests and timeouts.
-- **Concurrency & Mutexes**: Ensuring thread safety in the `pokecache` package while handling background cleanup (reaping).
-- **Project Structure**: Following Go best practices for package organization (`internal/` directory).
+- **HTTP Clients**: Managing network requests and timeouts with `http.Client`.
+- **Concurrency & Mutexes**: Ensuring thread safety in the `pokecache` package while handling background cleanup (reaping) with `sync.RWMutex` and `time.Ticker`.
+- **Project Structure**: Following Go best practices for package organization using the `internal/` directory.
 
 ---
